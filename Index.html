@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ботаническая станция</title>
+  <style>
+  /* Обновлённые CSS-переменные с природной палитрой */
+:root {
+  --primary-dark: #1B5E20;       /* Глубокий зелёный (листья) */
+  --primary: #2E7D32;            /* Основной зелёный */
+  --primary-light: #81C784;      /* Светлый зелёный */
+  --accent: #6bb83f;             /* Тёплый акцент (цветы) */
+  --accent-light: #6bb83f;       /* Светлый акцент */
+  --background: #F1F8E9;         /* Основной фон */
+  --card-bg: #E8F5E9;            /* Фон карточек */
+  --text-dark: #1B5E20;          /* Тёмный текст */
+  --text-medium: #33691E;        /* Основной текст */
+  --text-light: #689F38;         /* Светлый текст */
+  --white: #FFFFFF;
+  --shadow: 0 6px 18px rgba(27, 94, 32, 0.1);
+  --card-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+  --border-radius: 12px;
+  --transition: all 0.3s ease;
+}
+
+/* Базовые стили */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.7;
+  background: linear-gradient(135deg, var(--background) 0%, #E8F5E9 100%);
+  color: var(--text-medium);
+  overflow-x: hidden;
+  padding-top: 60px;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Основная сетка */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+/* Навигация */
+#top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(129, 199, 132, 0.3);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-around;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0.7rem 1rem;
+}
+
+#top-nav a {
+  color: var(--primary-dark);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+#top-nav a:hover {
+  background-color: var(--primary-light);
+  color: var(--white);
+}
+
+/* Герой-секция */
+#hero {
+  width: 100%;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  border: 1px solid rgba(129, 199, 132, 0.2);
+}
+
+#hero.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#hero h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--primary-dark);
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Галерея растений */
+.plant-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.plant-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid rgba(129, 199, 132, 0.3);
+}
+
+.plant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.2);
+}
+
+.plant-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent);
+}
+
+.plant-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.plant-card:hover img {
+  transform: scale(1.03);
+}
+
+.plant-card button {
+  border: none;
+  background-color: var(--accent);
+  color: white;
+  font-size: 1rem;
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+}
+
+.plant-card button:hover {
+  background-color: var(--accent-light);
+}
+
+.plant-card button.test-button {
+  background-color: var(--primary);
+  margin-top: 0;
+  border-radius: 0;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+}
+
+.plant-card button.test-button:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Блоки с растениями */
+.plant-block {
+  width: 100%;
+  max-width: 960px;
+  margin: 1.5rem auto;
+  padding: 2rem;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  border: 1px solid rgba(129, 199, 132, 0.2);
+}
+
+.plant-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.plant-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.plant-block img {
+  flex: 1 1 300px;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  object-fit: cover;
+  transition: var(--transition);
+  border: 1px solid rgba(129, 199, 132, 0.3);
+}
+
+.plant-block img:hover {
+  transform: scale(1.02);
+}
+
+.plant-info {
+  flex: 1 1 300px;
+}
+
+.plant-info h2 {
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.plant-info p {
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+.plant-info h3 {
+  color: var(--primary);
+  margin: 1.5rem 0 0.8rem;
+  font-size: 1.3rem;
+}
+
+.plant-info ul {
+  list-style-type: none;
+  margin-bottom: 1.5rem;
+}
+
+.plant-info li {
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+  color: #555;
+}
+
+.plant-info li::before {
+  content: "🌿";
+  position: absolute;
+  left: 0;
+}
+
+/* Тест */
+.quiz-block {
+  width: 100%;
+  max-width: 960px;
+  margin: 1.5rem auto;
+  padding: 2rem;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(129, 199, 132, 0.2);
+}
+
+.quiz-block h2 {
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.quiz-page {
+  display: none;
+}
+
+.quiz-page.active {
+  display: block;
+}
+
+.question {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  background: rgba(129, 199, 132, 0.05);
+  border: 1px solid rgba(129, 199, 132, 0.1);
+}
+
+.question p {
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: var(--primary-dark);
+}
+
+label {
+  display: block;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  transition: var(--transition);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(129, 199, 132, 0.2);
+}
+
+label:hover {
+  background-color: rgba(129, 199, 132, 0.1);
+}
+
+input[type="radio"] {
+  margin-right: 10px;
+}
+
+/* Кнопки */
+button {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: var(--transition);
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:hover {
+  background-color: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 160, 0, 0.3);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animated {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Стили для теста */
+.quiz-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.page-indicator {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #BDBDBD;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.dot.active {
+  background: var(--primary);
+  transform: scale(1.2);
+}
+
+.correct-answer {
+  background-color: #C8E6C9 !important;
+  border-color: var(--primary) !important;
+}
+
+.incorrect-answer {
+  background-color: #FFEBEE !important;
+  border-color: #EF5350 !important;
+}
+
+.result-chart {
+  height: 20px;
+  background: #E0E0E0;
+  border-radius: 10px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.chart-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-light), var(--primary));
+  transition: width 0.5s ease;
+}
+
+.page-transition-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  z-index: 9999;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: pageLoad 0.8s ease-in-out;
+}
+
+@keyframes pageLoad {
+  0% { transform: scaleX(0); }
+  50% { transform: scaleX(1); }
+  100% { transform: scaleX(0); opacity: 0; }
+}
+
+/* Микро-интерактивности */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-dark);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+/* ==================== */
+/* Мобильная адаптация */
+/* ==================== */
+
+@media (max-width: 1024px) {
+  /* Промежуточные размеры (планшеты) */
+  html {
+    font-size: 15px;
+  }
+  
+  .plant-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  /* Основные мобильные стили */
+  html {
+    font-size: 14px;
+  }
+  
+  body {
+    padding-top: 56px;
+  }
+
+  #hero, .plant-block, .quiz-block {
+    margin: 1rem auto;
+    padding: 1.5rem;
+  }
+
+  .plant-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+
+  #top-nav a {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .plant-gallery {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .plant-card img {
+    height: 160px;
+  }
+  
+  .plant-info h2 {
+    font-size: 1.6rem;
+  }
+  
+  .quiz-navigation {
+    flex-direction: column;
+  }
+  
+  .nav-button {
+    width: 100%;
+  }
+  
+  .question {
+    padding: 0.8rem;
+  }
+  
+  label {
+    padding: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Маленькие экраны */
+  body {
+    padding-top: 52px;
+  }
+
+  #hero, .plant-block, .quiz-block {
+    border-radius: 0;
+    margin: 0.5rem 0;
+    width: 100%;
+    padding: 1.2rem;
+  }
+  
+  #hero h1 {
+    font-size: 1.8rem;
+  }
+  
+  .plant-card button {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  .plant-info h2 {
+    font-size: 1.5rem;
+  }
+  
+  .plant-info h3 {
+    font-size: 1.2rem;
+  }
+  
+  .quiz-block h2 {
+    font-size: 1.4rem;
+  }
+  
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Горизонтальная ориентация на мобильных */
+  .plant-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .plant-card img {
+    height: 120px;
+  }
+  
+  #top-nav a {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  body {
+    padding-top: 48px;
+  }
+}
+
+/* Улучшения для touch-устройств */
+@media (hover: none) {
+  button:hover, #top-nav a:hover, .plant-card:hover {
+    transform: none !important;
+  }
+  
+  .plant-card:hover img {
+    transform: none !important;
+  }
+}
+  </style>
+  
+</head>
+<body>
+    <nav id="top-nav">
+  <div class="nav-container">
+    <a href="#hero">Главная</a>
+    <a href="#kolius">Колеус</a>
+    <a href="#tsinerariya">Цинерария</a>
+    <a href="#ageratum">Агератум</a>
+    <a href="#quiz">Тест</a>
+  </div>
+</nav>
+
+  <!-- Hero Block -->
+<header id="hero">
+  <h1>Ботаническая станция</h1>
+  <div class="plant-gallery">
+    <div class="plant-card">
+      <img src="https://cdn.pixabay.com/photo/2014/09/09/19/25/red-coleus-440346_1280.jpg" alt="Колеус">
+      <button onclick="location.href='#kolius'">Колеус</button>
+      <button class="test-button" data-page="2">Проверь себя</button>
+    </div>
+    <div class="plant-card">
+      <img src="https://cdn.pixabay.com/photo/2013/12/09/12/38/white-fuzzy-groundsel-225911_1280.jpg" alt="Цинерария">
+      <button onclick="location.href='#tsinerariya'">Цинерария</button>
+      <button class="test-button" data-page="1">Проверь себя</button>
+    </div>
+    <div class="plant-card">
+      <img src="https://cdn.pixabay.com/photo/2013/06/01/02/54/ageratum-houstonianum-115338_1280.jpg" alt="Агератум">
+      <button onclick="location.href='#ageratum'">Агератум</button>
+      <button class="test-button" data-page="3">Проверь себя</button>
+    </div>
+  </div>
+</header>
+
+  <!-- Block 2: Колиус -->
+  <section id="kolius" class="plant-block">
+    <img src="https://cdn.pixabay.com/photo/2019/11/28/17/55/coleus-4659703_1280.jpg" alt="Колеус">
+    <div>
+      <h2>Колеус</h2>
+      <p>Колеус — декоративное растение с особенно выразительной листвой, которое ценится за свою яркую, почти экзотическую окраску. Его листья крупные, бархатистые на ощупь, с мягким ворсистым налётом. Форма листьев напоминает овалы или сердечки с заострённым концом и зубчатым краем, придающим им слегка «рваный» вид. Часто листья украшены контрастными прожилками, мраморными разводами или каймой другого цвета.</p>
+      <p>Цветки невзрачные, собраны в колосовидные соцветия голубоватых или лиловых оттенков. Цветение наступает летом, но его часто удаляют, чтобы не ослаблять растение и сохранить яркость листьев.</p>
+      <h3>Уход:</h3>
+      <ul>
+        <li>☀️ предпочитает яркий рассеянный свет, в тени теряет яркость окраски;</li>
+        <li>🌱 предпочитает легкую, рыхлую, с нейтральной кислотностью почву;</li>
+        <li>💧 полив умеренный, без застоя воды, любит влажную, но не мокрую почву;</li>
+        <li>✂️ регулярная прищипка помогает сохранить пышность куста;</li>
+        <li>❄️ боится холода и сквозняков.</li>
+      </ul>
+      <h3>Экологическое значение:</h3>
+      <p>Колиус очищает воздух и повышает влажность в помещении, улучшая микроклимат. В природе служит укрытием для мелких насекомых.</p>
+      <h3>Интересные факты:</h3>
+      <p>🏛 Раньше его называли «крапивкой» за схожесть формы листа с крапивой. Листья меняют оттенок в зависимости от освещения — настоящий хамелеон среди растений.</p>
+    </div>
+  </section>
+
+  <!-- Block 3: Цинерария -->
+  <section id="tsinerariya" class="plant-block">
+    <img src="https://cdn.pixabay.com/photo/2018/07/07/14/42/silver-plant-3522231_1280.jpg" alt="Цинерария">
+    <div>
+      <h2>Цинерария</h2>
+      <p>Цинерария — это декоративно-лиственное растение с уникальными, густо опушёнными листьями серебристо-серого цвета. Форма листьев — сильно рассечённая, кружевная, напоминающая морозный узор или коралловые ветви. Благодаря плотному войлочному опушению растение кажется бархатным и мягким на ощупь.</p>
+      <p>Высота обычно от 20 до 40 см, кустик компактный и симметричный. Цветки — мелкие, жёлтые корзинки — не представляют декоративной ценности, поэтому их часто удаляют, чтобы не портить изысканный облик растения.</p>
+      <h3>Уход:</h3>
+      <ul>
+        <li>☀️ предпочитает солнечные места — чем больше солнца, тем ярче серебро;</li>
+        <li>🌱 предпочитает легкую, рыхлую почву, кроме тяжёлой и заболоченной;</li>
+        <li>💧 полив умеренный, засуху переносит лучше, чем переувлажнение;</li>
+        <li>✂️ можно прищипывать для лучшего кущения;</li>
+        <li>❄️ холодных регионах выращивается как однолетник или сохраняется в прохладном помещении.</li>
+      </ul>
+      <h3>Экологическое значение:</h3>
+      <p>Защищает почву от пересыхания и эрозии. В природной среде, особенно на склонах и в засушливых районах, выполняет роль почвопокровного растения.</p>
+      <h3>Интересные факты:</h3>
+      <p>Серебристый цвет — защита от перегрева и испарения влаги. Это приспособление к жаркому климату.</p>
+      <p>🏛 Название cineraria происходит от лат. <i>cinis</i> — «пепел», отсылая к характерному серебристому цвету.</p>
+    </div>
+  </section>
+
+  <!-- Block 4: Агератум -->
+  <section id="ageratum" class="plant-block">
+    <img src="https://cdn.pixabay.com/photo/2020/07/15/12/42/flowers-5407571_1280.jpg" alt="Агератум">
+    <div>
+      <h2>Агератум</h2>
+      <p>Агератум — нежное и яркое декоративное растение, известное своими мягкими, словно пушистыми соцветиями. Он словно облачко из миниатюрных цветков, которое дарит клумбам воздушность и живость.</p>
+      <p>Стебли — прямостоячие, густо разветвлённые, опушённые, создают компактный кустик. Листья — мягкие, овальные или сердцевидные, с мелкими зубчиками по краям. Имеют насыщенно-зелёный цвет и слегка бархатистую поверхность. Цветки — крошечные, трубчатые, густо покрытые тонкими ворсинками, за счёт чего выглядят как пушинки. Соцветия — плотные, округлые корзинки, собранные в щитковидные группы на верхушках побегов.</p>
+      <h3>Уход:</h3>
+      <ul>
+        <li>☀️ любит солнечные участки, не переносит заморозков;</li>
+        <li>🌱 предпочитает легкую, рыхлую, с нейтральной кислотностью почву;</li>
+        <li>💧 полив умеренный, без застоя воды;</li>
+        <li>✂️ удаление отцветших цветков продлевает цветение.</li>
+      </ul>
+      <h3>Экологическое значение:</h3>
+      <p>Привлекает пчёл и других опылителей, способствуя биоразнообразию. Благодаря плотному покрову листьев и невысокому росту, агератум помогает удерживать влагу в почве, препятствует её перегреву и снижает эрозию.</p>
+      <p>Содержат алкалоиды и эфирные масла, обладающие свойствами — отпугивать некоторых вредителей.</p>
+      <h3>Интересные факты:</h3>
+      <p>🏛 Название «Ageratum» происходит от греч. <i>ageratos</i> — «нестареющий»: цветки долго не увядают.</p>
+    </div>
+  </section>
+
+  <!-- Block 5: Квиз -->
+   <section id="quiz" class="quiz-block">
+    <h2>Быстрый тест по пройденному материалу</h2>
+    <p id="quiz-progress" style="text-align:center; font-weight:bold; margin-bottom:1rem;">
+      Страница 1/3 | Пройдено 0 из 5 вопросов
+    </p>
+    
+    <div class="page-indicator">
+      <span class="dot active" data-page="1"></span>
+      <span class="dot" data-page="2"></span>
+      <span class="dot" data-page="3"></span>
+    </div>
+    
+    <form id="quiz-form">
+      <div id="quiz-pages">
+        <!-- Страница 1: Цинерария -->
+        <div class="quiz-page active" data-page="1">
+          <h3>Цинерария</h3>
+          
+          <div class="question">
+            <p><b> Почему цветки цинерарии часто удаляют?</b></p>
+            <label><input type="radio" name="q1" value="wrong" /> 1) Они ядовиты</label>
+            <label><input type="radio" name="q1" value="correct" /> 2) Не представляют декоративной ценности</label>
+            <label><input type="radio" name="q1" value="wrong" /> 3) Привлекают вредителей</label>
+            <label><input type="radio" name="q1" value="wrong" /> 4) Плохо пахнут</label>
+          </div>
+
+          <div class="question">
+            <p><b> Соотнеси уход с описанием (выбери правильную комбинацию):</b></p>
+            <p>A. Полив, B. Свет, C. Почва</p>
+            <p>1. Лучше растёт на солнце — серебристый цвет ярче</p>
+            <p>2. Умеренный, засуху переносит лучше переувлажнения</p>
+            <p>3. Лёгкая, рыхлая, не заболоченная</p>
+            <label><input type="radio" name="q2" value="correct" /> A2 B1 C3</label>
+            <label><input type="radio" name="q2" value="wrong" /> A1 B3 C2</label>
+            <label><input type="radio" name="q2" value="wrong" /> A3 B2 C1</label>
+            <label><input type="radio" name="q2" value="wrong" /> A2 B3 C1</label>
+          </div>
+
+          <div class="question">
+            <p><b> Верно или неверно: Цинерария — растение с крупными и яркими цветками, которые являются главным декоративным элементом.</b></p>
+            <label><input type="radio" name="q3" value="wrong" /> Верно</label>
+            <label><input type="radio" name="q3" value="correct" /> Неверно</label>
+          </div>
+
+          <div class="question">
+            <p><b> Что НЕ относится к цинерарии?</b></p>
+            <label><input type="radio" name="q4" value="wrong" /> 1) Защищает почву от пересыхания</label>
+            <label><input type="radio" name="q4" value="wrong" /> 2) Имеет серебристо-серые, рассечённые листья</label>
+            <label><input type="radio" name="q4" value="correct" /> 3) Цветёт яркими крупными цветами</label>
+            <label><input type="radio" name="q4" value="wrong" /> 4) Может выращиваться как однолетник</label>
+          </div>
+
+          <div class="question">
+            <p><b> Название "цинерария" происходит от латинского слова "cinis", что означает...</b></p>
+            <label><input type="radio" name="q5" value="wrong" /> 1) пыльца</label>
+            <label><input type="radio" name="q5" value="correct" /> 2) пепел</label>
+            <label><input type="radio" name="q5" value="wrong" /> 3) листва</label>
+            <label><input type="radio" name="q5" value="wrong" /> 4) кора</label>
+          </div>
+
+          <div class="quiz-navigation">
+            <button type="button" class="nav-button next-page">Далее →</button>
+          </div>
+        </div>
+
+        <!-- Страница 2: Колеус -->
+        <div class="quiz-page" data-page="2">
+          <h3>Колиус</h3>
+          
+          <div class="question">
+            <p><b> Почему у колеуса часто удаляют цветки?</b></p>
+            <label><input type="radio" name="q6" value="wrong" /> 1) Чтобы ускорить рост корней</label>
+            <label><input type="radio" name="q6" value="correct" /> 2) Чтобы сохранить яркость листьев</label>
+            <label><input type="radio" name="q6" value="wrong" /> 3) Цветки ядовиты</label>
+            <label><input type="radio" name="q6" value="wrong" /> 4) Цветение вызывает аллергию</label>
+          </div>
+
+          <div class="question">
+            <p><b> Соотнеси уход с соответствующим требованием (выбери правильную комбинацию):</b></p>
+            <p>A. Свет, B. Полив, C. Почва</p>
+            <p>1. Умеренный, без застоя воды</p>
+            <p>2. Яркий рассеянный, в тени тускнеет окраска</p>
+            <p>3. Лёгкая, рыхлая, нейтральная по кислотности</p>
+            <label><input type="radio" name="q7" value="correct" /> A2 B1 C3</label>
+            <label><input type="radio" name="q7" value="wrong" /> A3 B1 C2</label>
+            <label><input type="radio" name="q7" value="wrong" /> A2 B3 C1</label>
+            <label><input type="radio" name="q7" value="wrong" /> A1 B2 C3</label>
+          </div>
+
+          <div class="question">
+            <p><b> Верно или неверно: Колеус не переносит холод и сквозняки.</b></p>
+            <label><input type="radio" name="q8" value="correct" /> Верно</label>
+            <label><input type="radio" name="q8" value="wrong" /> Неверно</label>
+          </div>
+
+          <div class="question">
+            <p><b> Что НЕ относится к описанию листьев колеуса?</b></p>
+            <label><input type="radio" name="q9" value="wrong" /> 1) Имеют контрастные прожилки</label>
+            <label><input type="radio" name="q9" value="correct" /> 2) Покрыты восковым налётом</label>
+            <label><input type="radio" name="q9" value="wrong" /> 3) Могут напоминать сердечки</label>
+            <label><input type="radio" name="q9" value="wrong" /> 4) Бархатистые на ощупь</label>
+          </div>
+
+          <div class="question">
+            <p><b> Ранее колеус называли "крапивкой", потому что...</b></p>
+            <label><input type="radio" name="q10" value="wrong" /> 1) им лечили ожоги</label>
+            <label><input type="radio" name="q10" value="wrong" /> 2) его можно спутать с дикорастущей крапивой</label>
+            <label><input type="radio" name="q10" value="correct" /> 3) листья имеют форму, схожую с крапивой</label>
+            <label><input type="radio" name="q10" value="wrong" /> 4) при прикосновении вызывает зуд</label>
+          </div>
+
+          <div class="quiz-navigation">
+            <button type="button" class="nav-button prev-page">← Назад</button>
+            <button type="button" class="nav-button next-page">Далее →</button>
+          </div>
+        </div>
+
+        <!-- Страница 3: Агератум -->
+        <div class="quiz-page" data-page="3">
+          <h3>Агератум</h3>
+          
+          <div class="question">
+            <p><b> Почему цветки агератума выглядят «пушистыми»?</b></p>
+            <label><input type="radio" name="q11" value="wrong" /> 1) Из-за формы стебля</label>
+            <label><input type="radio" name="q11" value="correct" /> 2) Из-за трубчатой формы цветков, покрытых ворсинками</label>
+            <label><input type="radio" name="q11" value="wrong" /> 3) Из-за густой листвы</label>
+            <label><input type="radio" name="q11" value="wrong" /> 4) Потому что их много на одном цветоносе</label>
+          </div>
+
+          <div class="question">
+            <p><b> Соотнеси характеристику ухода с её описанием (выбери правильную комбинацию):</b></p>
+            <p>A. Свет, B. Полив, C. Цветение</p>
+            <p>1. Не выносит переувлажнения</p>
+            <p>2. Любит солнце, не переносит заморозков</p>
+            <p>3. Отцветшие цветки нужно удалять для продления цветения</p>
+            <label><input type="radio" name="q12" value="correct" /> A2 B1 C3</label>
+            <label><input type="radio" name="q12" value="wrong" /> A3 B1 C2</label>
+            <label><input type="radio" name="q12" value="wrong" /> A2 B3 C1</label>
+            <label><input type="radio" name="q12" value="wrong" /> A1 B2 C3</label>
+          </div>
+
+          <div class="question">
+            <p><b> Верно или неверно: Агератум помогает удерживать влагу в почве и предотвращает эрозию.</b></p>
+            <label><input type="radio" name="q13" value="correct" /> Верно</label>
+            <label><input type="radio" name="q13" value="wrong" /> Неверно</label>
+          </div>
+
+          <div class="question">
+            <p><b> Что НЕ относится к описанию цветков агератума?</b></p>
+            <label><input type="radio" name="q14" value="wrong" /> 1) Плотные соцветия</label>
+            <label><input type="radio" name="q14" value="wrong" /> 2) Цветы напоминают пушинки</label>
+            <label><input type="radio" name="q14" value="correct" /> 3) Яркие и крупные, как у розы</label>
+            <label><input type="radio" name="q14" value="wrong" /> 4) Трубчатые, мелкие, с ворсинками</label>
+          </div>
+
+          <div class="question">
+            <p><b> Слово "Ageratum" с греческого языка означает...</b></p>
+            <label><input type="radio" name="q15" value="wrong" /> 1) лёгкость</label>
+            <label><input type="radio" name="q15" value="wrong" /> 2) пушистость</label>
+            <label><input type="radio" name="q15" value="correct" /> 3) нестареющий</label>
+            <label><input type="radio" name="q15" value="wrong" /> 4) солнечный</label>
+          </div>
+
+          <div class="quiz-navigation">
+            <button type="button" class="nav-button prev-page">← Назад</button>
+            <button type="submit" class="nav-button">Проверить ответы</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div id="quiz-result" style="display:none;"></div>
+  </section>
+
+  <script>
+   document.addEventListener('DOMContentLoaded', () => {
+  // Конфигурация приложения
+  const config = {
+    quizPages: 3,
+    questionsPerPage: 5,
+    totalQuestions: 15,
+    saveResults: true,
+    animations: true,
+    mobileBreakpoint: 768 // точка перехода на мобильные стили
+  };
+
+  // Главный класс приложения
+  class BotanicalApp {
+    constructor() {
+      this.isMobile = window.innerWidth <= config.mobileBreakpoint;
+      this.initElements();
+      this.initEventListeners();
+      this.restoreProgress();
+      this.handleInitialState();
+      this.setupAnimations();
+      this.setupMobileUX();
+      
+      // Отслеживание изменения размера окна
+      window.addEventListener('resize', this.handleResize.bind(this));
+    }
+
+    // Инициализация DOM элементов
+    initElements() {
+      this.elements = {
+        quizForm: document.getElementById('quiz-form'),
+        quizResult: document.getElementById('quiz-result'),
+        quizProgress: document.getElementById('quiz-progress'),
+        testButtons: document.querySelectorAll('.test-button'),
+        nextButtons: document.querySelectorAll('.next-page'),
+        prevButtons: document.querySelectorAll('.prev-page'),
+        dots: document.querySelectorAll('.dot'),
+        radioInputs: document.querySelectorAll('input[type="radio"]'),
+        animatedElements: document.querySelectorAll('.plant-block, #hero, .plant-card'),
+        plantCards: document.querySelectorAll('.plant-card'),
+        plantBlocks: document.querySelectorAll('.plant-block')
+      };
+    }
+
+    // Настройка обработчиков событий
+    initEventListeners() {
+      // Делегирование событий для лучшей производительности
+      document.body.addEventListener('click', (e) => {
+        // Обработка кнопок навигации теста
+        if (e.target.classList.contains('next-page')) {
+          this.handleNavigation(e, 'next');
+        } else if (e.target.classList.contains('prev-page')) {
+          this.handleNavigation(e, 'prev');
+        }
+        
+        // Обработка индикаторов-точек
+        if (e.target.classList.contains('dot')) {
+          e.preventDefault();
+          this.switchPage(e.target.dataset.page);
+        }
+        
+        // Обработка кнопок "Проверь себя"
+        if (e.target.classList.contains('test-button')) {
+          this.handleTestButton(e);
+        }
+      });
+
+      // Обработка изменений радио-кнопок
+      this.elements.quizForm.addEventListener('change', (e) => {
+        if (e.target.matches('input[type="radio"]')) {
+          this.updateProgress();
+          if (config.saveResults) this.saveAnswers();
+        }
+      });
+
+      // Обработка отправки формы
+      this.elements.quizForm.addEventListener('submit', (e) => this.handleSubmit(e));
+
+      // Навигация клавиатурой
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') this.handleNavigation(null, 'next');
+        if (e.key === 'ArrowLeft') this.handleNavigation(null, 'prev');
+      });
+    }
+
+    // Обработка изменения размера окна
+    handleResize() {
+      const newIsMobile = window.innerWidth <= config.mobileBreakpoint;
+      
+      if (newIsMobile !== this.isMobile) {
+        this.isMobile = newIsMobile;
+        this.setupMobileUX();
+        
+        // Пересчет анимаций при изменении ориентации
+        if (this.isMobile) {
+          this.setupTouchAnimations();
+        }
+      }
+    }
+
+    // Настройка UX для мобильных устройств
+    setupMobileUX() {
+      // Оптимизация анимаций для мобильных
+      document.documentElement.style.setProperty(
+        '--transition', 
+        this.isMobile ? 'all 0.2s ease' : 'all 0.3s ease'
+      );
+
+      // Оптимизация hover-эффектов
+      if (this.isMobile) {
+        document.body.classList.add('is-mobile');
+      } else {
+        document.body.classList.remove('is-mobile');
+      }
+
+      // Предотвращение масштабирования при фокусе
+      if (this.isMobile) {
+        document.querySelectorAll('input, textarea, select').forEach(el => {
+          el.addEventListener('focus', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+      }
+    }
+
+    // Специальные анимации для touch-устройств
+    setupTouchAnimations() {
+      this.elements.plantCards.forEach(card => {
+        card.addEventListener('touchstart', () => {
+          card.style.transform = 'translateY(-2px)';
+        });
+        
+        card.addEventListener('touchend', () => {
+          card.style.transform = '';
+        });
+      });
+    }
+
+    // Обработка навигации
+    handleNavigation(e, direction) {
+      if (e) e.preventDefault();
+      const currentPage = this.getCurrentPage();
+      const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
+      
+      if (newPage >= 1 && newPage <= config.quizPages) {
+        this.switchPage(newPage);
+      }
+    }
+
+    // Переключение страниц
+    switchPage(newPage) {
+      const currentPageElem = document.querySelector('.quiz-page.active');
+      const newPageElem = document.querySelector(`.quiz-page[data-page="${newPage}"]`);
+
+      if (!newPageElem || !currentPageElem) return;
+
+      // Анимация перехода с учетом мобильных устройств
+      this.animateTransition(currentPageElem, newPageElem, () => {
+        currentPageElem.classList.remove('active');
+        newPageElem.classList.add('active');
+        this.updateDots();
+        this.updateProgress();
+        
+        // Прокрутка к верху страницы на мобильных
+        if (this.isMobile) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        history.replaceState(null, null, `#quiz?page=${newPage}`);
+      });
+    }
+
+    // Анимация перехода между страницами
+    animateTransition(oldPage, newPage, callback) {
+      if (!config.animations) {
+        callback();
+        return;
+      }
+
+      const duration = this.isMobile ? 250 : 300;
+      
+      oldPage.style.transition = `opacity ${duration}ms ease`;
+      oldPage.style.opacity = '0';
+
+      setTimeout(() => {
+        callback();
+        newPage.style.opacity = '0';
+        newPage.style.transition = `opacity ${duration}ms ease`;
+        
+        setTimeout(() => {
+          newPage.style.opacity = '1';
+        }, 20);
+      }, duration);
+    }
+
+    // Обновление индикаторов точек
+    updateDots() {
+      const currentPage = this.getCurrentPage();
+      this.elements.dots.forEach(dot => {
+        dot.classList.toggle('active', dot.dataset.page == currentPage);
+      });
+    }
+
+    // Обновление прогресса теста
+    updateProgress() {
+      const currentPage = this.getCurrentPage();
+      const answered = document.querySelectorAll(
+        `.quiz-page[data-page="${currentPage}"] input[type="radio"]:checked`
+      ).length;
+      
+      this.elements.quizProgress.textContent = 
+        `Страница ${currentPage}/${config.quizPages} | Пройдено ${answered} из ${config.questionsPerPage} вопросов`;
+    }
+
+    // Обработка кнопки "Проверь себя"
+    handleTestButton(e) {
+      e.preventDefault();
+      const page = e.target.getAttribute('data-page');
+      
+      this.showLoader(() => {
+        this.switchPage(page);
+        this.scrollToQuiz();
+      });
+    }
+
+    // Плавная прокрутка к тесту
+    scrollToQuiz() {
+      const quizElement = document.getElementById('quiz');
+      const offset = this.isMobile ? 60 : 80; // Учет высоты навигации
+      
+      window.scrollTo({
+        top: quizElement.offsetTop - offset,
+        behavior: 'smooth'
+      });
+    }
+
+    // Показать индикатор загрузки
+    showLoader(callback) {
+      const loader = document.createElement('div');
+      loader.className = 'page-transition-loader';
+      document.body.appendChild(loader);
+      
+      setTimeout(() => {
+        callback();
+        setTimeout(() => loader.remove(), this.isMobile ? 300 : 500);
+      }, this.isMobile ? 200 : 300);
+    }
+
+    // Обработка отправки теста
+    handleSubmit(e) {
+      e.preventDefault();
+      const score = this.calculateScore();
+      this.showResults(score);
+      
+      if (config.saveResults) {
+        this.saveStats(score);
+      }
+    }
+
+    // Подсчет результатов
+    calculateScore() {
+      let score = 0;
+
+      // Сброс подсветки
+      document.querySelectorAll('label').forEach(label => {
+        label.classList.remove('correct-answer', 'incorrect-answer');
+      });
+
+      // Проверка ответов
+      for (let i = 1; i <= config.totalQuestions; i++) {
+        const selected = this.elements.quizForm.querySelector(`input[name="q${i}"]:checked`);
+        if (!selected) continue;
+
+        const label = selected.parentElement;
+        if (selected.value === 'correct') {
+          score++;
+          label.classList.add('correct-answer');
+        } else {
+          label.classList.add('incorrect-answer');
+          const correctAnswer = this.elements.quizForm.querySelector(`input[name="q${i}"][value="correct"]`);
+          if (correctAnswer) correctAnswer.parentElement.classList.add('correct-answer');
+        }
+      }
+
+      return score;
+    }
+
+    // Показать результаты
+    showResults(score) {
+      const percentage = Math.round((score / config.totalQuestions) * 100);
+      let message = '';
+      
+      if (percentage >= 90) message = 'Великолепно! Вы настоящий эксперт в ботанике! 🌿';
+      else if (percentage >= 70) message = 'Хороший результат! Почти всё знаете! 👍';
+      else if (percentage >= 50) message = 'Неплохо, но есть куда расти! 🌱';
+      else message = 'Попробуйте изучить материалы ещё раз! 📚';
+
+      this.elements.quizResult.style.display = 'block';
+      this.elements.quizResult.innerHTML = `
+        <div class="result-chart">
+          <div class="chart-fill" style="width: ${percentage}%"></div>
+        </div>
+        <h3>Результат: ${score} из ${config.totalQuestions} (${percentage}%)</h3>
+        <p>${message}</p>
+        <button id="retry-btn" class="nav-button">Пройти ещё раз</button>
+      `;
+
+      document.getElementById('retry-btn').addEventListener('click', () => {
+        this.resetQuiz();
+      });
+      
+      // Прокрутка к результатам на мобильных
+      if (this.isMobile) {
+        setTimeout(() => {
+          this.elements.quizResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 300);
+      }
+    }
+
+    // Сброс теста
+    resetQuiz() {
+      document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.checked = false;
+      });
+      
+      if (config.saveResults) {
+        localStorage.removeItem('quizAnswers');
+      }
+      
+      this.switchPage(1);
+      this.elements.quizResult.style.display = 'none';
+      this.updateProgress();
+    }
+
+    // Сохранение ответов
+    saveAnswers() {
+      const answers = {};
+      document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+        answers[input.name] = input.value;
+      });
+      localStorage.setItem('quizAnswers', JSON.stringify(answers));
+    }
+
+    // Сохранение статистики
+    saveStats(score) {
+      const stats = {
+        date: new Date().toLocaleString(),
+        score: score,
+        total: config.totalQuestions,
+        percentage: Math.round((score / config.totalQuestions) * 100)
+      };
+
+      const allStats = JSON.parse(localStorage.getItem('quizStats') || '[]');
+      allStats.push(stats);
+      localStorage.setItem('quizStats', JSON.stringify(allStats));
+    }
+
+    // Восстановление прогресса
+    restoreProgress() {
+      if (!config.saveResults) return;
+      
+      const savedAnswers = JSON.parse(localStorage.getItem('quizAnswers')) || {};
+      Object.keys(savedAnswers).forEach(q => {
+        const input = document.querySelector(`input[name="${q}"][value="${savedAnswers[q]}"]`);
+        if (input) input.checked = true;
+      });
+      
+      this.updateProgress();
+    }
+
+    // Обработка начального состояния
+    handleInitialState() {
+      const hash = window.location.hash;
+      if (hash.includes('#quiz')) {
+        const pageParam = new URLSearchParams(hash.split('?')[1]).get('page');
+        if (pageParam) this.switchPage(parseInt(pageParam));
+      }
+    }
+
+    // Анимация элементов при прокрутке
+    setupAnimations() {
+      if (!config.animations) return;
+
+      const observerOptions = {
+        threshold: this.isMobile ? 0.05 : 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      this.elements.animatedElements.forEach(el => observer.observe(el));
+    }
+
+    // Получение текущей страницы
+    getCurrentPage() {
+      const activePage = document.querySelector('.quiz-page.active');
+      return activePage ? parseInt(activePage.dataset.page) : 1;
+    }
+  }
+
+  // Запуск приложения
+  new BotanicalApp();
+});
+  </script>
+</body>
+</html>
